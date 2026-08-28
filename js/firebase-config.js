@@ -8,13 +8,14 @@
  * 获取方式：Firebase 控制台 → 项目设置 → 常规 → 「您的应用」里的 SDK 配置。
  */
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyCBoQxM85NGmSb9NAa7YcRf350dEzyfEZE",
+  authDomain: "minesweeper-221f3.firebaseapp.com",
+  databaseURL: "https://minesweeper-221f3-default-rtdb.firebaseio.com",
+  projectId: "minesweeper-221f3",
+  storageBucket: "minesweeper-221f3.firebasestorage.app",
+  messagingSenderId: "465173800268",
+  appId: "1:465173800268:web:44c0780723fafe970c1be9",
+  measurementId: "G-X8YLMWX648"
 };
 
 /** 是否为未配置的占位值。 */
