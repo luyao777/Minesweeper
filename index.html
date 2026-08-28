@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🌈 卡通扫雷大冒险 · Minesweeper</title>
+  <meta name="description" content="一个卡通可爱风格的扫雷小游戏，过关难度递增，挑战全球最高分！" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💣</text></svg>" />
+</head>
+<body>
+  <!-- 背景装饰云朵 -->
+  <div class="bg-decor" aria-hidden="true">
+    <span class="cloud cloud1">☁️</span>
+    <span class="cloud cloud2">☁️</span>
+    <span class="cloud cloud3">☁️</span>
+    <span class="star star1">⭐</span>
+    <span class="star star2">✨</span>
+    <span class="star star3">🌟</span>
+  </div>
+
+  <main class="app">
+    <!-- 标题区 -->
+    <header class="title-bar">
+      <h1 class="title">💥 卡通扫雷大冒险 💥</h1>
+      <p class="subtitle">点点点，避开小炸弹，闯关拿高分！</p>
+    </header>
+
+    <!-- 玩家名 + 排行榜区 -->
+    <section class="player-bar">
+      <label class="name-box">
+        <span>🧑‍🎤 你的昵称</span>
+        <input id="playerName" type="text" maxlength="12" placeholder="小可爱" autocomplete="off" />
+      </label>
+      <div class="records">
+        <div class="record-card local">
+          <div class="record-icon">🏠</div>
+          <div class="record-text">
+            <span class="record-label">本机最高分</span>
+            <span class="record-value" id="localBest">0</span>
+          </div>
+        </div>
+        <div class="record-card global">
+          <div class="record-icon">🌍</div>
+          <div class="record-text">
+            <span class="record-label">全球最高分</span>
+            <span class="record-value" id="globalBest">—</span>
+          </div>
+        </div>
+      </div>
+      <button id="rankBtn" class="btn btn-ghost" type="button">🏆 排行榜</button>
+    </section>
+
+    <!-- 状态栏 -->
+    <section class="status-bar">
+      <div class="stat">
+        <span class="stat-icon">🎯</span>
+        <span class="stat-label">关卡</span>
+        <span class="stat-value" id="level">1</span>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">⭐</span>
+        <span class="stat-label">当前分数</span>
+        <span class="stat-value" id="score">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">💣</span>
+        <span class="stat-label">剩余雷</span>
+        <span class="stat-value" id="minesLeft">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">⏱️</span>
+        <span class="stat-label">用时</span>
+        <span class="stat-value" id="timer">0s</span>
+      </div>
+    </section>
+
+    <!-- 游戏面板 -->
+    <section class="board-wrap">
+      <div id="board" class="board" role="grid" aria-label="扫雷游戏区"></div>
+      <div id="overlay" class="overlay hidden">
+        <div class="overlay-card">
+          <div class="overlay-emoji" id="overlayEmoji">🎉</div>
+          <h2 class="overlay-title" id="overlayTitle">过关啦！</h2>
+          <p class="overlay-msg" id="overlayMsg">进入下一关～</p>
+          <button id="overlayBtn" class="btn btn-primary" type="button">继续</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 操作栏 -->
+    <section class="controls">
+      <button id="flagModeBtn" class="btn btn-toggle" type="button" title="移动端切换标记模式">🚩 标记模式：关</button>
+      <button id="restartBtn" class="btn btn-secondary" type="button">🔄 重新开始</button>
+      <button id="helpBtn" class="btn btn-ghost" type="button">❓ 玩法</button>
+    </section>
+
+    <footer class="footer">
+      <p>用 ❤️ 制作 · 部署于 GitHub Pages</p>
+    </footer>
+  </main>
+
+  <!-- 排行榜弹窗 -->
+  <div id="rankModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✖️</button>
+      <h2 class="modal-title">🏆 全球排行榜</h2>
+      <p class="modal-sub" id="rankHint">Top 10 高手榜（需配置后端才可全球同步）</p>
+      <ol id="rankList" class="rank-list"></ol>
+    </div>
+  </div>
+
+  <!-- 玩法弹窗 -->
+  <div id="helpModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✖️</button>
+      <h2 class="modal-title">📖 玩法说明</h2>
+      <ul class="help-list">
+        <li>🖱️ <b>左键</b>点开格子，<b>右键</b>（或标记模式）插旗标记炸弹。</li>
+        <li>🔢 数字代表周围 8 格里炸弹的数量。</li>
+        <li>🌈 点开所有非炸弹格子即可过关，分数会累积。</li>
+        <li>📈 每过一关，棋盘更大、炸弹更多，难度递增！</li>
+        <li>💥 踩到炸弹游戏结束，本次累计分数将计入排行榜。</li>
+        <li>⏱️ 用时越短，过关时间奖励越高。</li>
+      </ul>
+      <button class="btn btn-primary" data-close>知道啦！</button>
+    </div>
+  </div>
+
+  <!-- 飘字提示 -->
+  <div id="toast" class="toast"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
